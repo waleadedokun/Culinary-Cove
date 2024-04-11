@@ -257,6 +257,30 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
 
     </div>
     
+     <!--Footer Begins Here-->
+     <div class="footer">
+            <div class="footer-1">
+                <div class="logo">
+                    <img src="./icons/e-logo.png" alt="" style="width: 40px; height: 40px;">
+                    <div>
+                        <h4>CULINARY COVE</h4>
+                    </div>
+                </div>
+                <div>
+                    <address>
+                        <p>Email: a.adedokun2@rgu.ac.uk</p>
+                        <p>YouTube: ENGINEER </p>
+                        <p>Garthdee House, Garthdee Rd, Garthdee, <br>city, Aberdeen <br>Scotland</p>
+                    </address>
+                </div>
+            </div>
+
+            <div class="footer-2">
+                <img src="./icons//e-logo.png" alt="">
+                <h2>Powered by <em>ENGINEER WHALE</em></h2>
+            </div>
+        </div>
+        <!--Footer End Here-->
     
 </body>
 </html>
