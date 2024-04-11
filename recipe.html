@@ -1,54 +1,3 @@
-<?php
-$mysqli = require 'connect_db.php';
-
-
-function getAllRecipes($mysqli) {
-    $recipes = [];
-    $sql = "SELECT r.recipe_id, r.title, r.image_url, u.username FROM recipes r JOIN users u ON r.user_id = u.user_id";
-    $result = $mysqli->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $recipes[] = $row;
-    }
-    return $recipes;
-}
-
-// Initialize variables
-$allRecipes = [];
-$searchTerm = '';
-$category = '';
-$location = '';
-
-// Check if search parameters are present in the URL
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
-    $searchTerm = $_GET['search'];
-    $category = isset($_GET['category']) ? $_GET['category'] : '';
-    $location = isset($_GET['location']) ? $_GET['location'] : '';
-
-    // Construct the search query based on search term, category, and location
-    $sql = "SELECT r.recipe_id, r.title, r.image_url, u.username 
-            FROM recipes r 
-            JOIN users u ON r.user_id = u.user_id 
-            WHERE r.title LIKE '%$searchTerm%'";
-
-    if (!empty($category)) {
-        $sql .= " AND r.category = '$category'";
-    }
-
-    if (!empty($location)) {
-        $sql .= " AND r.location = '$location'";
-    }
-
-    // Execute the search query
-    $result = $mysqli->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $allRecipes[] = $row;
-    }
-} else {
-    // If no search parameters are present, get all recipes
-    $allRecipes = getAllRecipes($mysqli);
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,34 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CULINARY-COVE</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Culinary Cove</title>
-    <style>
-        
-        .recipe-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            grid-gap: 20px;
-            
-        }
-        .recipe-card {
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-        .recipe-card img {
-            max-width: 100%;
-            height: auto;
-        }
-        .r-container{
-            align-content="center"
-            padding-left: 20px;
-        }
-    </style>
+
 </head>
 <body>
-     <!--Header (Navbar) Begins Here-->
-     <header>
+    <!--Header (Navbar) Begins Here-->
+    <header>
         <div class="header">
 
     <!-- Navbar Activation Toogle Begins Here-->
@@ -215,48 +141,48 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
         </div>      
     </header>
     <!--Header (Navbar) End Here-->
-   
-    <div class="r-container">
-    <h2>Recipes</h2>
-    <p><a href="logout.php">Back</a></p>
-    <a href="recipes.php">All Recipes</a>
-    
-    <!-- Search form -->
-    <form action="" method="GET">
-        <input type="text" name="search" placeholder="Search recipes by keyword">
-        <select name="category">
-            <option value="">Select category</option>
-            <option value="Breakfast">Breakfast Meal</option>
-            <option value="Lunch">Lunch Meal</option>
-            <option value="Supper">Supper Meal</option>
-        </select>
-        <select name="location">
-            <option value="">Select location</option>
-            
-            <option value="Nigeria">Nigeria</option>
-            <option value="United Kingdom">United Kingdom</option>
-        
-        </select>
-        <button type="submit">Search</button>
-    </form>
-    
-   
-    <!-- Display recipes -->
-    <div class="recipe-container">
-    
-        <?php foreach ($allRecipes as $recipe): ?>
-            <div class="recipe-card">
-                <img src="<?= $recipe['image_url'] ?>" alt="<?= $recipe['title'] ?>">
-                <h3><?= $recipe['title'] ?></h3>
-                <p>By: <?= $recipe['username'] ?></p>
-                <a href="view_recipe.php?recipe_id=<?= $recipe['recipe_id'] ?>">View</a>
-                
-            </div>
-        <?php endforeach; ?>
-    </div>
+   <!--Recipe Season Begin Here -->
+    <h2>Add Recipe</h2>
+    <form action="add_recipe.php" method="post" enctype="multipart/form-data">
+      <label for="title">Title:</label><br />
+      <input type="text" id="title" name="title" required /><br />
 
-    </div>
+      <label for="description">Description:</label><br />
+      <textarea id="description" name="description" rows="4" required></textarea
+      ><br />
+
+      <label for="instructions">Instructions:</label><br />
+      <textarea id="instructions" name="instructions" rows="4" required></textarea
+      ><br />
+
+
+      <label for="category">Category:</label><br />
+      <select name="category">
+        <option value="">Select category</option>
+        <!-- Add options for categories -->
+        <option value="Breakfast">Breakfast Meal</option>
+        <option value="Lunch">Lunch Meal</option>
+        <option value="Supper">Supper Meal</option>
+      </select><br />
+
+      <label for="location">Location:</label><br />
+      <select name="location">
+        <option value="">Select location</option>
+        <option value="Nigeria">Nigeria</option>
+        <option value="United Kingdom">United Kingdom</option>
     
-    
-</body>
+      </select><br />
+
+      <label for="image">Image:</label><br />
+      <input
+        type="file"
+        id="image"
+        name="image"
+        accept="image/*"
+        required
+      /><br />
+
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
 </html>
